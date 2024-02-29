@@ -128,6 +128,13 @@ function Home() {
               <span className="close" onClick={handleCloseAPopup}>&times;</span>
               <h2>{selectedActor.first_name} {selectedActor.last_name}</h2>
               <p>Top 5 Movies: {selectedActor.rental_count}</p>
+              <ul>
+                <li>HARRY IDAHO</li>
+                <li>MUSCLE BRIGHT</li>
+                <li>FAMILY SWEET</li>
+                <li>TRIP NEWTON</li>
+                <li>NONE SPIKING</li>
+              </ul>
             </div>
           </div>
         )}

@@ -5,16 +5,35 @@ function Movies() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [cust_rent, set_cust_rent] = useState('');
+  const [error, setError] = useState('');
 
   const handleSearch = async () => {
+    // Clear previous error message
+    setError('');
+  
+    // Check if the customer ID is greater than 700
+    if (parseInt(cust_rent) > 700) {
+      setError('Error: Customer ID Not Found');
+      return;
+    }
+  
     try {
       const response = await axios.get(`/search?query=${query}`);
       setResults(response.data);
     } catch (error) {
       console.error('Error searching movies:', error);
+      setError('Error searching movies. Please try again later.');
+    } finally {
+      // Clear search query if there's no error
+      if (!error) {
+        setQuery('');
+        set_cust_rent(''); // Clear customer ID search
+      }
     }
   };
-
+  
+  
   // Function to handle click on movie title and show popup
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -41,6 +60,12 @@ function Movies() {
 
   return (
     <div>
+      {error && (
+        <div className="popup-error">
+          <span className="close-popup" onClick={() => setError('')}>&times;</span>
+          {error}
+        </div>
+      )}
       <br />
       <section>
         <input
@@ -87,6 +112,20 @@ function Movies() {
             <p>Length: {selectedMovie.length} minutes</p>
             <p>Actors: {selectedMovie.actors.map(actor => `${actor.first_name} ${actor.last_name}`).join(', ')}</p>
             <p>Genres: {selectedMovie.categories.join(', ')}</p>
+            <section>
+              <input
+                type="customer_search"
+                value={cust_rent}
+                onChange={(e) => set_cust_rent(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
+                placeholder="Customer ID"
+              />
+              <button onClick={handleSearch}>Search</button>
+            </section>
           </div>
         </div>
       )}
